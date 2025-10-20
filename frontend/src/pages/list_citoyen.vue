@@ -3,10 +3,26 @@ import { ref } from 'vue'
 
 const data = ref([])
 const searchTerm = ref('')
+const searchProvince=ref('')
 
 async function searchCitizens() {
-  const res = await fetch(`http://127.0.0.1:8000/api/citoyen/?search=${searchTerm.value}`)
-  data.value = await res.json()
+  try {
+    // Construction dynamique de l’URL selon les filtres
+    let url = 'http://127.0.0.1:8000/api/citoyen/?'
+
+    if (searchTerm.value) {
+      url += `search=${encodeURIComponent(searchTerm.value)}&`
+    }
+
+    if (searchProvince.value) {
+      url += `province=${encodeURIComponent(searchProvince.value)}`
+    }
+
+    const res = await fetch(url)
+    data.value = await res.json()
+  } catch (error) {
+    console.error('Erreur lors de la recherche :', error)
+  }
 }
 
 searchCitizens()
@@ -21,6 +37,19 @@ searchCitizens()
             placeholder="🔍 Rechercher un citoyen..." 
             class="search-bar"
         />
+        <select 
+            v-model="searchProvince" 
+            @change="searchCitizens" 
+            class="province-select"
+        >
+            <option value="">Toutes les provinces</option>
+            <option value="Mahajanga">Mahajanga</option>
+            <option value="Antananarivo">Antananarivo</option>
+            <option value="Fianarantsoa">Fianarantsoa</option>
+            <option value="Toliara">Toliara</option>
+            <option value="Toamasina">Toamasina</option>
+            <option value="Antsiranana">Antsiranana</option>
+        </select>
 
     </div>
     
@@ -80,6 +109,13 @@ searchCitizens()
     }
     .search-bar{
         width: 400px;
+        height: 35px;
+        margin: 20px;
+        border-radius: 10px;
+    }
+    .province-select{
+        text-align: center;
+        width: 200px;
         height: 35px;
         margin: 20px;
         border-radius: 10px;

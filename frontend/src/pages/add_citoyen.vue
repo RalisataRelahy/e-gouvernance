@@ -109,8 +109,32 @@
         <legend>Adresse</legend>
         <textarea v-model="formData.adresse" placeholder="Adresse complète*" required class="full-width"></textarea>
         <div class="form-row">
-          <input v-model="formData.province" placeholder="Province*" required />
-          <input v-model="formData.region" placeholder="Région" />
+          <select v-model="formData.province" name="province" id="province" required>
+            <option value="">Toutes les provinces</option>
+            <option value="Mahajanga">Mahajanga</option>
+            <option value="Antananarivo">Antananarivo</option>
+            <option value="Fianarantsoa">Fianarantsoa</option>
+            <option value="Toliara">Toliara</option>
+            <option value="Toamasina">Toamasina</option>
+            <option value="Antsiranana">Antsiranana</option>
+          </select>
+
+<!-- Sélecteur dynamique des régions -->
+          <select 
+            name="region" 
+            id="region" 
+            v-model="formData.region"
+            v-if="regions[formData.province]"
+          >
+            <option 
+              v-for="region in regions[formData.province]" 
+              :key="region"
+              :value="region"
+            >
+              {{ region }}
+            </option>
+          </select>
+
         </div>
         <div class="form-row">
           <input v-model="formData.commune" placeholder="Commune*" required />
@@ -276,6 +300,47 @@ const photoPreviewUrl = ref('')
 const facialData = ref(null)
 const isScanning = ref(false)
 const isSubmitting = ref(false)
+
+const regions = ref({
+  'Antananarivo': [
+    'Analamanga',
+    'Bongolava',
+    'Itasy',
+    'Vakinankaratra'
+  ],
+  'Fianarantsoa': [
+    'Amoron\'i Mania',
+    'Atsimo-Atsinanana',
+    'Haute Matsiatra',
+    'Ihorombe',
+    'Vatovavy-Fitovinany'
+  ],
+  'Toamasina': [
+    'Alaotra-Mangoro',
+    'Analanjirofo',
+    'Atsinanana'
+  ],
+  'Mahajanga': [
+    'Betsiboka',
+    'Boeny',
+    'Melaky',
+    'Sofia'
+  ],
+  'Toliara': [
+    'Androy',
+    'Anosy',
+    'Atsimo-Andrefana',
+    'Menabe'
+  ],
+  'Antsiranana': [
+    'Diana',
+    'Sava'
+  ]
+});
+
+async function onChangedProvince(){
+
+}
 function handlePhotoUpload(event) {
   const file = event.target.files[0]
   if (file) {
