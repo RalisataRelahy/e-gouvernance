@@ -21,7 +21,7 @@
         
         <div class="hero-buttons">
           <button class="btn btn-primary">Accéder au Système</button>
-          <button class="btn btn-secondary">En savoir plus</button>
+          <button class="btn btn-secondary"><a href="about">En savoir plus</a></button>
         </div>
       </div>
     </section>

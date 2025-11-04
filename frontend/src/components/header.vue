@@ -22,6 +22,9 @@
         <router-link to="/info_doc" class="nav-link">
           Documents Administratifs
         </router-link>
+        <router-link to="/about" class="nav-link">
+          A propos
+        </router-link>
       </nav>
     </div>
     
