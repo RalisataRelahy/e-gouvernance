@@ -49,7 +49,7 @@ Le projet a pour objectif de **rendre la gouvernance plus transparente, particip
 ### 1️⃣ Cloner le dépôt
 
 ```bash
-git clone https://github.com/<ton-username>/e-gouvernance.git
+git clone https://github.com/RalisataRelahy/e-gouvernance.git
 cd e-gouvernance
 
 ```
@@ -63,7 +63,7 @@ npm run dev
 
 Et pour le backend:
 ```bash
-cd backend
+cd gestionpop
 python -m venv venv
 source venv/bin/activate  # ou venv\Scripts\activate sous Windows
 pip install -r requirements.txt
@@ -91,3 +91,4 @@ e-gouvernance/
         ├── none
 ├── README.md
 └── requirements.txt
+
