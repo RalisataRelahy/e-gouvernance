@@ -52,20 +52,25 @@ Le projet a pour objectif de **rendre la gouvernance plus transparente, particip
 git clone https://github.com/<ton-username>/e-gouvernance.git
 cd e-gouvernance
 
+```
 
 Pour lancer le frontend:
+```bash
 cd frontend
 npm install
 npm run dev
+```
 
 Et pour le backend:
+```bash
 cd backend
 python -m venv venv
 source venv/bin/activate  # ou venv\Scripts\activate sous Windows
 pip install -r requirements.txt
 python manage.py runserver
-
+```
 Structure du projet:
+```bash
 e-gouvernance/
 │
 ├── backend/
