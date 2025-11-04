@@ -1,9 +1,16 @@
 <script setup>
-import { ref } from 'vue'
+import { ref,onMounted } from 'vue'
 
 const data = ref([])
 const searchTerm = ref('')
 const searchProvince=ref('')
+const provinces = ref([])
+
+onMounted(async () => {
+  const res = await fetch('http://127.0.0.1:8000/api/provinces/')
+  provinces.value = await res.json()
+})
+
 
 async function searchCitizens() {
   try {
@@ -24,7 +31,26 @@ async function searchCitizens() {
     console.error('Erreur lors de la recherche :', error)
   }
 }
+function getSexe(userSex){
+    if(userSex==="M") return "eur";
+    else if(userSex==="F")return "euse";
+    return ''
+}
+function getNumCIN(cinNum) {
+  if (cinNum === null || cinNum === '') return "Min"
+  console.log(cinNum);
+  return cinNum
+}
 
+function getProvinceName(id) {
+  if (!id) return ''
+  const prov = provinces.value.find(p => p.id === id)
+  return prov ? prov.nom : ''
+}
+function capitalizeFirstLetter(word) {
+  if (!word) return '';
+  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+}
 searchCitizens()
 
 </script>
@@ -42,13 +68,10 @@ searchCitizens()
             @change="searchCitizens" 
             class="province-select"
         >
-            <option value="">Toutes les provinces</option>
-            <option value="Mahajanga">Mahajanga</option>
-            <option value="Antananarivo">Antananarivo</option>
-            <option value="Fianarantsoa">Fianarantsoa</option>
-            <option value="Toliara">Toliara</option>
-            <option value="Toamasina">Toamasina</option>
-            <option value="Antsiranana">Antsiranana</option>
+            <option value="">Choisir une province</option>
+            <option v-for="prov in provinces" :key="prov.id" :value="prov.id">
+                {{ prov.nom }}
+            </option>
         </select>
 
     </div>
@@ -76,10 +99,10 @@ searchCitizens()
         <td>{{ c.nom }}</td>
         <td>{{ c.prenoms }}</td>
         <td>{{ c.date_naissance }}</td>
-        <td>{{ c.lieu_naissance }}</td>
-        <td>{{ c.province }}</td>
+        <td>{{ capitalizeFirstLetter(c.lieu_naissance) }}</td>
+        <td>{{ getProvinceName(c.province) }}</td>
         <td>{{ c.quartier }}</td>
-        <td>{{ c.numero_cin }}</td>
+        <td>{{ getNumCIN(c.numero_cin)+getSexe(c.sexe) }}</td>
     </tr>
 
         </tbody>

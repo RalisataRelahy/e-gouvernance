@@ -19,6 +19,9 @@
         <router-link to="/list_citoyen" class="nav-link">
           Liste des citoyens
         </router-link>
+        <router-link to="/info_doc" class="nav-link">
+          Documents Administratifs
+        </router-link>
       </nav>
     </div>
     
@@ -118,8 +121,8 @@ h1 {
   padding: 12px 20px;
   color: white;
   text-decoration: none;
-  font-weight: 600;
-  font-size: 15px;
+  font-weight: 500;
+  font-size: 13px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   transition: all 0.3s ease;

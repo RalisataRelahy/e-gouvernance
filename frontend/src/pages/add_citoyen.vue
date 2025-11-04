@@ -35,12 +35,12 @@
       </fieldset>
 
       <!-- DOCUMENTS D'IDENTITÉ -->
-      <fieldset>
+      <fieldset v-if="formData.age>18">
         <legend>Documents d'Identité</legend>
-        <input v-model="formData.numero_cin" placeholder="Numéro CIN*" required />
-        <input v-model="formData.numero_passeport" placeholder="Numéro de passeport" />
-        <input v-model="formData.numero_securite_sociale" placeholder="Numéro sécurité sociale" />
-        <input v-model="formData.numero_contribuable" placeholder="Numéro contribuable" />
+        <input v-model="formData.numero_cin" placeholder="Numéro CIN*" required maxlength="14"/>
+        <input v-model="formData.numero_passeport" placeholder="Numéro de passeport" required maxlength="14"/>
+        <input v-model="formData.numero_securite_sociale" placeholder="Numéro sécurité sociale" required maxlength="14"/>
+        <input v-model="formData.numero_contribuable" placeholder="Numéro contribuable" required maxlength="14"/>
       </fieldset>
       <!-- SECTION PHOTO ET BIOMÉTRIE -->
       <fieldset>
@@ -109,31 +109,30 @@
         <legend>Adresse</legend>
         <textarea v-model="formData.adresse" placeholder="Adresse complète*" required class="full-width"></textarea>
         <div class="form-row">
-          <select v-model="formData.province" name="province" id="province" required>
-            <option value="">Toutes les provinces</option>
-            <option value="Mahajanga">Mahajanga</option>
-            <option value="Antananarivo">Antananarivo</option>
-            <option value="Fianarantsoa">Fianarantsoa</option>
-            <option value="Toliara">Toliara</option>
-            <option value="Toamasina">Toamasina</option>
-            <option value="Antsiranana">Antsiranana</option>
+            <select v-model="formData.province">
+              <option value="">Choisir une province</option>
+              <option v-for="prov in provinces" :key="prov.id" :value="prov.id">
+                {{ prov.nom }}
+              </option>
+
           </select>
 
 <!-- Sélecteur dynamique des régions -->
           <select 
-            name="region" 
-            id="region" 
-            v-model="formData.region"
-            v-if="regions[formData.province]"
-          >
-            <option 
-              v-for="region in regions[formData.province]" 
-              :key="region"
-              :value="region"
-            >
-              {{ region }}
-            </option>
-          </select>
+                name="region" 
+                id="region" 
+                v-model="formData.region"
+                v-if="regions[formData.province]"
+              >
+                <option 
+                  v-for="region in regions[formData.province]" 
+                  :key="region"
+                  :value="region"
+                >
+                  {{ region }}
+                </option>
+              </select>
+
 
         </div>
         <div class="form-row">
@@ -233,7 +232,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive,watch } from 'vue'
 
 const formData = reactive({
   // Informations personnelles
@@ -241,6 +240,7 @@ const formData = reactive({
   prenoms: '',
   sexe: '',
   date_naissance: '',
+  age:null,
   lieu_naissance: '',
   nationalite: 'Malagasy',
   situation_familiale: '',
@@ -292,7 +292,21 @@ const formData = reactive({
   profession_pere: '',
   profession_mere: ''
 })
-
+// 🧮 Calcul automatique de l’âge quand la date change
+watch(() => formData.date_naissance, (newDate) => {
+  if (!newDate) {
+    formData.age = null
+    return
+  }
+  const today = new Date()
+  const birthDate = new Date(newDate)
+  let age = today.getFullYear() - birthDate.getFullYear()
+  const m = today.getMonth() - birthDate.getMonth()
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--
+  }
+  formData.age = age
+})
 const data = ref([])
 const message = ref('')
 const success = ref(false)
@@ -302,45 +316,48 @@ const isScanning = ref(false)
 const isSubmitting = ref(false)
 
 const regions = ref({
-  'Antananarivo': [
+  1: [
     'Analamanga',
     'Bongolava',
     'Itasy',
     'Vakinankaratra'
   ],
-  'Fianarantsoa': [
+  2: [
     'Amoron\'i Mania',
     'Atsimo-Atsinanana',
     'Haute Matsiatra',
     'Ihorombe',
     'Vatovavy-Fitovinany'
   ],
-  'Toamasina': [
+  3: [
     'Alaotra-Mangoro',
     'Analanjirofo',
     'Atsinanana'
   ],
-  'Mahajanga': [
+  4: [
     'Betsiboka',
     'Boeny',
     'Melaky',
     'Sofia'
   ],
-  'Toliara': [
+  5: [
     'Androy',
     'Anosy',
     'Atsimo-Andrefana',
     'Menabe'
   ],
-  'Antsiranana': [
+  6: [
     'Diana',
     'Sava'
   ]
 });
 
-async function onChangedProvince(){
+const provinces = ref([])
 
-}
+onMounted(async () => {
+  const res = await fetch('http://127.0.0.1:8000/api/provinces/')
+  provinces.value = await res.json()
+})
 function handlePhotoUpload(event) {
   const file = event.target.files[0]
   if (file) {
@@ -430,7 +447,11 @@ async function submitForm() {
   try {
     // Création FormData pour gérer les fichiers
     const formDataToSend = new FormData()
-    
+    console.log(formData.province)
+    if (formData.age < 18) {
+      formData.numero_cin = null; // ou ''
+    }
+
     // Ajout des champs texte
     Object.keys(formData).forEach(key => {
       if (formData[key] !== null && formData[key] !== '' && 

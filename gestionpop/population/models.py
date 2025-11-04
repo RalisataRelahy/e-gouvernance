@@ -1,5 +1,11 @@
 from django.db import models
 
+class Province(models.Model):
+    nom = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.nom
+
 class Citoyen(models.Model):
     # Choix pour les champs
     SEXE_CHOICES = [
@@ -55,14 +61,21 @@ class Citoyen(models.Model):
     situation_familiale = models.CharField(max_length=1, choices=SITUATION_FAMILIALE_CHOICES, default='C')
     
     # === DOCUMENTS D'IDENTITÉ ===
-    numero_cin = models.CharField(max_length=20, unique=True)
+    numero_cin = models.CharField(max_length=20, unique=True, blank=True, null=True)
     numero_passeport = models.CharField(max_length=20, blank=True, null=True)
     numero_securite_sociale = models.CharField(max_length=30, blank=True, null=True)
     numero_contribuable = models.CharField(max_length=20, blank=True, null=True)
     
     # === INFORMATIONS DE RÉSIDENCE ===
     adresse = models.TextField()
-    province = models.CharField(max_length=100)
+    province = models.ForeignKey(
+        'Province',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='citoyens'
+    )
+
     region = models.CharField(max_length=100, blank=True, null=True)
     commune = models.CharField(max_length=100)
     quartier = models.CharField(max_length=100)
