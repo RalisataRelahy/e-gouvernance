@@ -190,7 +190,30 @@ const documents = ref([
     lieu_depot: "Centre des Services des Impôts (CSI)", 
     couleur: "#00843d", 
     type: "fiscal" 
-}, { id: 4, 
+}, 
+{
+    id:6,
+    nom:"Duplicata CIN",
+    icon:"fas fa-person",
+    description1: "Document de duplicata", 
+    description2: "Duplicata:En cas de perte de l'original CIN.", 
+    docRequis: [ "1-Declaration de perte", "4-Photo d'identite", "CIN photocopie ou infos a propos du CIN", "4-photos d'identité biométriques" ,], 
+    lieu_depot: "Commissariat Centrale", 
+    couleur: "#ff671f", 
+    type: "identite" 
+},
+{
+    id:6,
+    nom:"Declaration de Perte d'un Document",
+    icon:"fas fa-none",
+    description1: "Document de declaration de perte d'un document", 
+    description2: "En cas de perte d'un document administratif.", 
+    docRequis: [ "1-Certificat de residence", "2-Photo d'identite", , "4000Ar"], 
+    lieu_depot: "Commissariat de Police", 
+    couleur: "#ff671f",
+    type: "identite" 
+},
+{ id: 4, 
     nom: "Titre Foncier", 
     icon: "fas fa-home", 
     description1: "Preuve de propriété immobilière", 
