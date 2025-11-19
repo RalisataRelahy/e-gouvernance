@@ -1,0 +1,92 @@
+#container {
+  height: auto; /* on évite une hauteur fixe */
+  padding: 5px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  /* background: linear-gradient(90deg, #1f1c2c, #928dab); */
+
+  /* background: linear-gradient(90deg, #006233, #ffffff, #d21034); */
+    /* background: linear-gradient(90deg, rgba(0,98,51,0.9), rgba(255,255,255,0.8), rgba(210,16,52,0.9)); */
+  flex-wrap: wrap; /* permet au contenu de passer sur plusieurs lignes si besoin */
+}
+
+/* Image */
+#container img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+
+/* Titre principal */
+#container h1 {
+    margin: 0;
+  -webkit-text-stroke: 1px black;
+  letter-spacing: 2px;
+  word-spacing: 5px;
+  font-size: 90px;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  /* text-align: center; */
+  flex: 1;
+}
+
+/* Couleurs de texte */
+#red {
+  color: red;
+}
+#green {
+  color: green;
+}
+#white {
+  color: white;
+}
+
+/* --- Responsive --- */
+
+/* Tablette (≤ 1024px) */
+@media (max-width: 1024px) {
+  #container {
+    padding: 10px;
+  }
+
+  #container h1 {
+    font-size: 60px;
+  }
+
+  #container img {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* Smartphone (≤ 768px) */
+@media (max-width: 768px) {
+  #container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  #container h1 {
+    font-size: 48px;
+    margin-top: 10px;
+  }
+
+  #container img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+  }
+}
+
+/* Très petit écran (≤ 480px) */
+@media (max-width: 480px) {
+  #container h1 {
+    font-size: 36px;
+  }
+
+  #container img {
+    width: 80px;
+    height: 80px;
+  }
+}

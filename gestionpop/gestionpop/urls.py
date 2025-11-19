@@ -1,24 +1,24 @@
-"""
-URL configuration for gestionpop project.
+# gestionpop/urls.py (Votre fichier principal)
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include
+
+# 1. Importez les vues JWT
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,  # Pour obtenir les tokens (le login)
+    TokenRefreshView,    # Pour rafraîchir le token d'accès
+)
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-   path('', include('population.urls')),
+    
+    # 2. Ajoutez les URLs de l'API d'authentification
+    # Le POST sur ce chemin prendra username et password, et renverra access et refresh tokens
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # Le POST sur ce chemin prendra le refresh token et renverra un nouveau access token
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
+    # Vos URLs d'application (comme /api/provinces/ via population.urls)
+    path('', include('population.urls')),
 ]

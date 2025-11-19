@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'django_filters',
+    'rest_framework_simplejwt',
     'population',
 ]
 
@@ -70,16 +72,31 @@ TEMPLATES = [
         },
     },
 ]
+# settings.py - ✅ The Correct Configuration
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': [
+    # ... other settings
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication', # or your custom path
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
-        'rest_framework.filters.SearchFilter',
-    ]
+        'rest_framework.filters.SearchFilter', # Example filter backend
+    ),
+    # ...
 }
 
 WSGI_APPLICATION = 'gestionpop.wsgi.application'
 
+# --- SIMPLE JWT SETTINGS ---
+from datetime import timedelta
 
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True, # Bonne pratique de sécurité
+    # ... autres configurations
+}
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -132,8 +149,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5173",
 ]
+CORS_ALLOW_ALL_ORIGINS = True
 
 DATABASES = {
     'default': {

@@ -1,35 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import { useState } from 'react';
+import Header from './components/header';
+import Login from './components/login';
+import Register from './components/inscription';
+import './assets/Contain.css'
 function App() {
-  const [count, setCount] = useState(0)
+  const [page, setPage] = useState('login');
+
+  const renderContent = () => {
+    switch (page) {
+      case 'login': return <Login setPage={setPage} />;
+      case 'register': return <Register setPage={setPage} />;
+      default: return <Login setPage={setPage} />;
+    }
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div>
+      <Header title="KOLOTRACK" /> {/* header fixe */}
+      <div className="container">
+        {renderContent()} {/* contenu dynamique */}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
